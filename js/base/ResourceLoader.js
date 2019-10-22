@@ -8,9 +8,11 @@ export class ResourceLoader{
     constructor(){
         // 获取图片资源的路径
         this.map=new Map(Resources);
+        console.log(this.map)
         // 遍历集合Map，将其中的字符串路径替换对象
         for(let [k,v] of this.map){
             const img =new Image();
+            // const img=wx.createImage();
             img.src=v;//将图片路径赋值给img的src属性
             // 将原来的字符串替换为img对象(重新设置k对应的值)
             // map.set(key,value) 设置map集合中某个key的值为value
