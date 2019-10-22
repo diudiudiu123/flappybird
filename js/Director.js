@@ -2,6 +2,7 @@ import { DataStore } from "./base/DataStore.js";
 import { UpPipe } from "./runtime/UpPipe.js";
 import { DownPipe } from "./runtime/DownPipe.js";
 import { StartButton } from "./player/StartButton.js";
+import {Tool} from "./extra.js"
 // 导演类，控制游戏的主流程，逻辑
 export class Director{
     constructor(){
@@ -70,6 +71,8 @@ export class Director{
         // 越过的肯定第一组水管,所以只需要判断小鸟与第一组水管的位置关系
         if(birds.birdsX[0]>pipes[0].x+pipes[0].width&&score.canAdd){
             score.score++;
+            const t=new Tool();
+            t.playMusic('./audio/bullet.mp3',false).play();
             // 改变加分状态为不可加分;
             score.canAdd=false;
         }
@@ -133,8 +136,19 @@ export class Director{
         // 循环运行
         this.id=requestAnimationFrame(()=>this.run());
     }else{
+       let t= new Tool()
+       t.zhendong(); 
+       t.playMusic('./audio/boom.mp3',false).play();
         // 游戏结束，停止循环渲染
         cancelAnimationFrame(this.id);
+        // 游戏结束重新渲染一次，避免安卓贴图错乱
+        this.dataStore.get('background').draw();
+        this.dataStore.get('pipes').forEach(p=>{
+          p.draw();
+        });
+        this.dataStore.get('land').draw();
+        this.dataStore.get('birds').draw();
+        this.dataStore.get('score').draw();
         // 画结束的按钮
         this.dataStore.get('StartButton').draw();
         // 销毁数据
